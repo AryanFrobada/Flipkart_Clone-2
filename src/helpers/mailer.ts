@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
-import { AppDataSource } from "@/dataSource";
+import { getDataSource } from "@/dbConfig/dataSource";
 import {User} from "@/models/User"
 
 export const sendEmail = async({email, emailType, userId}: {
@@ -11,10 +11,8 @@ export const sendEmail = async({email, emailType, userId}: {
 }) => {
     try{
         const hashedToken = await bcrypt.hash(userId.toString(), 10);
-
-        await AppDataSource.initialize();
-
-        const userRepository = AppDataSource.getRepository(User);
+        const dataSource = getDataSource();
+        const userRepository = dataSource.getRepository(User);
 
         if(emailType === 'VERIFY'){
             await userRepository.update(userId, {
