@@ -65,7 +65,7 @@ exports.getProductById = async (req: Request, res: Response) => {
 exports.getProductByCategory = async(req: Request, res: Response) => {
     const baseUrl = process.env.DUMMYJSON_BASE_URL;
     try{
-        const categoryName = 'smartphones' || req.params.category
+        const categoryName = 'smartphones';
         // const categoryName = req.body();
         if (!categoryName) {
             return res.status(400).json({
