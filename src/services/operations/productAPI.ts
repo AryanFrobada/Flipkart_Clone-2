@@ -26,18 +26,36 @@ export async function fetchAllCategories() {
 }
 
 
+export async function fetchProductsOfCategories() {
+    try{
+        const response = await apiConnector('GET', GET_PRODUCT_BY_CATEGORY_API);
+        console.log("GET_PRODUCT_BY_CATEGORY_API RESPONSE.....", response);
+
+        if(!response.data.success){
+            throw new Error(response.data.message);
+        }
+
+        console.log("Printing Product Array: ", response.data.data.products);
+
+        return response.data.data.products;
+    } catch(err){
+        console.log("Error fetching category products !!", err);
+        throw err;
+    }
+}
+
+
 export const fetchCategoryImageBySlug = async (slug) => {
     try {
       const response = await axios.get(`https://dummyjson.com/products/category/${slug}`);
       const products = response.data.products
-      console.log("Printing Products", products);
+    //   console.log("Printing Products", products);
       
-      // Return the first product's image if available
       if (products && products.length > 0) {
         if(slug === 'fragrances'){
             return products[1].thumbnail;
         }
-        return products[0].thumbnail;  // Assuming 'thumbnail' holds the image URL
+        return products[0].thumbnail; 
       }
       return null;
     } catch (error) {

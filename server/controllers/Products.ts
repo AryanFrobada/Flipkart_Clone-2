@@ -65,7 +65,8 @@ exports.getProductById = async (req: Request, res: Response) => {
 exports.getProductByCategory = async(req: Request, res: Response) => {
     const baseUrl = process.env.DUMMYJSON_BASE_URL;
     try{
-        const categoryName = req.params.category;
+        const categoryName = 'smartphones' || req.params.category
+        // const categoryName = req.body();
         if (!categoryName) {
             return res.status(400).json({
                 success: false,
@@ -74,7 +75,10 @@ exports.getProductByCategory = async(req: Request, res: Response) => {
         }
 
         const response = await axios.get(`${baseUrl}/products/category/${categoryName}`);
+        // console.log("Printing Response in backend product bt category: ", response);
         const products = response.data;
+
+        console.log("Printing Products in backend !!", products);
 
         return res.status(200).json({
             success: true,

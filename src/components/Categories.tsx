@@ -12,7 +12,7 @@ export default function CategoriesWithImages() {
         // Fetch categories
         const categoryNames = await fetchAllCategories();
         const res = categoryNames.data;
-        console.log("printing category names: ", res);
+        // console.log("printing category names: ", res);
 
         // Fetch images for each category
         const categoriesWithImages = await Promise.all(res.map(async (category: any) => {
@@ -20,7 +20,7 @@ export default function CategoriesWithImages() {
           return { name: category.name, imageUrl };
         }));
 
-        console.log("Printing category images response: ", categoriesWithImages);
+        // console.log("Printing category images response: ", categoriesWithImages);
 
         setCategories(categoriesWithImages);
       } catch (error) {
