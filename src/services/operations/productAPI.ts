@@ -26,9 +26,9 @@ export async function fetchAllCategories() {
 }
 
 
-export async function fetchProductsOfCategories() {
+export async function fetchProductsOfCategories(slug: string) {
     try{
-        const response = await apiConnector('GET', GET_PRODUCT_BY_CATEGORY_API);
+        const response = await apiConnector('GET', `http://localhost:4000/api/v1/products/getProductByCategory/${slug}`);
         console.log("GET_PRODUCT_BY_CATEGORY_API RESPONSE.....", response);
 
         if(!response.data.success){

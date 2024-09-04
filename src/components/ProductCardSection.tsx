@@ -10,7 +10,7 @@ export default function Section() {
   useEffect(() => {
     const getProductsByCategory = async () => {
       try {
-        const productData = await fetchProductsOfCategories();
+        const productData = await fetchProductsOfCategories('smartphones');
         // const res = productData.data;
 
         if (Array.isArray(productData)) {
