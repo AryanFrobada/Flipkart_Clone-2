@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import Categories from "../components/Categories"// Adjust the import path as needed
 import Banners from "../components/Banners";

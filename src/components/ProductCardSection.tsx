@@ -1,10 +1,12 @@
 'use client';
 import { useEffect, useState } from "react";
 import { fetchProductsOfCategories } from "../services/operations/productAPI";
+import { useRouter } from "next/navigation";
 
 // Define TypeScript type for products if using TypeScript
 
 export default function Section() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function Section() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
         {products.map((product, index) => (
           <div
+            onClick={() => router.push(`/category/${product.category}`)}
             key={index} // Use a unique identifier for the key
             className="bg-white shadow-lg cursor-pointer rounded-lg border border-gray-200 p-1 overflow-hidden hover:shadow-xl transition-shadow duration-300"
           >
