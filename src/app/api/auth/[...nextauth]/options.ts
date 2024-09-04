@@ -1,39 +1,44 @@
-// app/api/auth/[...nextauth]/options.ts
-
-import { NextAuthOptions } from "next-auth";
+import { Account, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
-import { getDataSource } from "@/dbConfig/dataSource";
-import { User } from "@/models/User";
+import { getDataSource } from "../../../../../server/config/dataSource";
+import { User } from "../../../../../server/models/User";
+import { Profile } from "next-auth";
+
+interface GoogleProfile extends Profile {
+  email_verified?: boolean;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials): Promise<any> {
+      async authorize(credentials: any): Promise<any> {
         try {
-          if (!credentials?.email || !credentials.password) {
+          if (!credentials?.email || !credentials?.password) {
             throw new Error("Email and Password are required");
           }
 
           const dataSource = getDataSource();
           const userRepository = dataSource.getRepository(User);
 
-          // Find the user by email
-          const user = await userRepository.findOne({ where: { email: credentials.email } });
+          const user = await userRepository.findOne({ where: { email: credentials.email.toString() } });
 
           if (!user) {
+            console.log("No user found with this email");
             throw new Error("No user found with this email");
           }
 
           const isValidPassword = await bcrypt.compare(credentials.password, user.password);
 
           if (!isValidPassword) {
+            console.log("Invalid credentials");
             throw new Error("Invalid credentials");
           }
 
@@ -46,24 +51,34 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          redirect_uri: 'http://localhost:3000/api/auth/callback/google',
+        }
+      }
     }),
   ],
   pages: {
-    signIn: '/signin',
-    error: '/auth/error', // Uncomment if you have an error page
-    verifyRequest: '/auth/verify-request', // Uncomment if you have an email verification page
+    signIn: '/sign-in',
   },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
 
   callbacks: {
+    async signIn({ user, account, profile }: { user: any; account: any; profile?: GoogleProfile }) {
+      if (account?.provider === "google") {
+        return profile?.email_verified && profile.email?.endsWith("@gmail.com") || false;
+      }
+      return true; // Allow sign in for other providers
+    },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id.toString();
         token.email = user.email;
       }
       return token;
@@ -71,13 +86,9 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user && token) {
         session.user.id = token.id as string;
-        session.user.email = token.email;
+        session.user.email = token.email as string;
       }
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   // Redirect users to the homepage after sign-in
-    //   return url.startsWith(baseUrl) ? url : baseUrl;
-    // },
   },
 };

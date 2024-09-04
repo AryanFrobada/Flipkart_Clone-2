@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                  // Or a more recent version
+    "module": "commonjs",
+    "experimentalDecorators": true,     // Enable experimental decorators
+    "emitDecoratorMetadata": true,       // Emit metadata for decorators
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "types": ["node"]
+  },
+  "include": ["index.ts", "config/**/*.ts", "controllers/**/*.ts", "models/**/*.ts", "routes/**/*.ts"],
+  "exclude": ["node_modules"]
+}

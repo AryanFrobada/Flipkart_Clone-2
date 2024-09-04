@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../components/navbar"; // Adjust the import path as needed
+import Categories from "../components/Categories"// Adjust the import path as needed
+import Banners from "../components/Banners";
 
-const page = () => {
+export default function HomePage() {
   return (
-    <div className='h-[100vh] w-[100vw] text-4xl flex flex-col justify-center items-center'>This is a Home Page</div>
-  )
+    <div className="min-w-screen min-h-screen bg-gray-100">
+      <Navbar />
+      <Categories />
+      <Banners />
+    </div>
+  );
 }
-
-export default page

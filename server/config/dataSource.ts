@@ -1,7 +1,10 @@
+// server/dbConfig/dataSource.ts
 import { DataSource } from 'typeorm';
-import { User } from '../../server/models/User';
+import { User } from '../models/User'; 
+import { Cart } from '../models/Cart';
+import { CartItem } from '../models/CartItem';
+import { Product } from '../models/Product';
 
-// Create a singleton instance for DataSource
 let dataSource: DataSource;
 
 export const connect = async () => {
@@ -11,8 +14,9 @@ export const connect = async () => {
 
   dataSource = new DataSource({
     type: 'sqlite',
-    database: './database.sqlite', // Path to your SQLite database file
-    entities: [User],
+    database: './database.sqlite', // Ensure the path is correct
+    entities: [User, Cart, CartItem, Product],
+    // entities: [User],
     synchronize: true, // Be careful with this in production; it auto-updates the schema
     logging: true,     // Enable this for debugging, disable in production
   });

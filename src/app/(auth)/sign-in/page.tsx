@@ -5,18 +5,18 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
 import { useState } from "react";
-// import { useDebounceCallback } from 'usehooks-ts';
 import { useToast } from "../../../hooks/use-toast";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
-import { signupSchema } from "../../../schemas/authSchemas";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
+import { signinSchema } from "../../../schemas/authSchemas"; 
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input"; 
 import { Button } from "../../../components/ui/button";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { ApiResponse } from "../../../types/ApiResponse";
 
-const SignUpPage = () => {
+const SignInPage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,30 +24,44 @@ const SignUpPage = () => {
   const router = useRouter();
 
   // zod implementation
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+  const form = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
     }
   });
 
-  const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`/api/v1/auth/signup`, data);
-      toast({
-        title: 'Success',
-        description: response.data.message,
+      const response = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
       });
-      router.replace(`/verifyemail`);
+
+      console.log('Sign-in response:', response);
+
+      if (response?.error) {
+        toast({
+          title: 'Sign-in Failed',
+          description: response.error,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Signed in successfully!',
+        });
+        router.push('/');
+      }
     } catch (err) {
+      console.log('Sign-in error:', err); // Add this line
       const axiosError = err as AxiosError<ApiResponse>;
       toast({
-        title: 'Signup Failed',
-        description: axiosError.response?.data.message ?? "An error occurred during signup.",
+        title: 'Sign-in Failed',
+        description: axiosError.response?.data.message ?? "An error occurred during sign-in.",
         variant: "destructive",
       });
     } finally {
@@ -60,47 +74,13 @@ const SignUpPage = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Flipkart
+            Welcome Back
           </h1>
-          <p className="mb-4">Sign up to start your shopping adventure</p>
+          <p className="mb-4">Sign in to continue your adventure</p>
         </div>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              name="firstName"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>FirstName</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="FirstName"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              name="lastName"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LastName</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="LastName"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               name="email"
               control={form.control}
@@ -138,15 +118,21 @@ const SignUpPage = () => {
             />
 
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait</> : 'Signup'}
+              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait</> : 'Sign In'}
             </Button>
           </form>
         </Form>
 
+        <Button onClick={() => signIn('google')}
+            disabled={isSubmitting}
+            variant="outline">
+            Sign in with Google
+        </Button>
+
         <div className="text-center mb-4">
-          <p>Already a Member?{' '}</p>
-          <Link href="/signin" className="text-blue-600 hover:text-blue-800">
-            Sign In
+          <p>Don't have an account?{' '}</p>
+          <Link href="/signup" className="text-blue-600 hover:text-blue-800">
+            Sign Up
           </Link>
         </div>
       </div>
@@ -154,4 +140,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignInPage;
