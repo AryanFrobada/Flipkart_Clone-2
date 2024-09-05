@@ -37,7 +37,10 @@ export default function CategoriesWithImages() {
     <div className="bg-white py-4 mx-auto w-[95vw] mt-5">
       <div className="mx-12 flex overflow-x-auto space-x-4 py-2 px-4 scrollbar-hide">
         {categories.length > 0 ? categories.map((category, index) => (
-          <div onClick={() => router.push(`/category/${category.slug}}`)} key={index} className="flex-shrink-0 bg-white p-2 text-center cursor-pointer">
+          <div onClick={() => {
+              const cleanCategory = category.slug.replace(/[{}]/g, ""); // Removes { and } if present
+              router.push(`/category/${cleanCategory}`);
+          }} key={index} className="flex-shrink-0 bg-white p-2 text-center cursor-pointer">
             <img
               src={category.imageUrl}
               alt={category.name}

@@ -39,7 +39,10 @@ export default function Section() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
         {products.map((product, index) => (
           <div
-            onClick={() => router.push(`/category/${product.category}`)}
+            onClick={() => {
+              const cleanCategory = product.category.replace(/[{}]/g, ""); // Removes { and } if present
+              router.push(`/category/${cleanCategory}`);
+            }}
             key={index} // Use a unique identifier for the key
             className="bg-white shadow-lg cursor-pointer rounded-lg border border-gray-200 p-1 overflow-hidden hover:shadow-xl transition-shadow duration-300"
           >

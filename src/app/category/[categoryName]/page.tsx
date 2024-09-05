@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -8,7 +6,6 @@ import { fetchProductsOfCategories } from "../../../services/operations/productA
 export default function CategoryPage() {
     const [products, setProducts] = useState<any[]>([]);
 
-    // Extract category name from URL
     const path = window.location.pathname; // "/category/smartphones"
     const segments = path.split('/');
     const categoryname = segments[segments.length - 1]; // Extract category name
@@ -67,7 +64,7 @@ export default function CategoryPage() {
                                 {product.rating} ⭐
                             </div>
                             <div className="flex flex-col mb-4">
-                                <p className="text-lg font-bold text-gray-700 mb-1">{product.price}</p>
+                                <p className="text-lg font-bold text-gray-700 mb-1">$ {product.price}</p>
                                 <p className="text-sm text-red-500 mb-1">{product.discountPercentage}% off</p>
                                 <p className="text-sm text-gray-500 mb-1">Free Delivery</p>
                                 <p className="text-sm text-gray-500">Save Extra with Combo Offers</p>
