@@ -5,7 +5,7 @@ import { CartItem } from '../models/CartItem';
 import { User } from '../models/User';
 
 // Function to get or create a cart for a user
-exports.getCartByUserId = async (req: Request, res: Response) => {
+export const getCartByUserId = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const userRepository = dataSource.getRepository(User);
@@ -49,7 +49,7 @@ exports.getCartByUserId = async (req: Request, res: Response) => {
 };
 
 // Function to add an item to a user's cart
-exports.addToCart = async (req: Request, res: Response) => {
+export const addToCart = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const cartItemRepository = dataSource.getRepository(CartItem);
@@ -122,7 +122,7 @@ exports.addToCart = async (req: Request, res: Response) => {
 
 
 
-exports.removeItemFromCart = async (req: Request, res: Response) => {
+export const removeItemFromCart = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const cartItemRepository = dataSource.getRepository(CartItem);
@@ -192,7 +192,7 @@ exports.removeItemFromCart = async (req: Request, res: Response) => {
 
 
 
-exports.updateItemQuantity = async (req: Request, res: Response) => {
+export const updateItemQuantity = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const cartItemRepository = dataSource.getRepository(CartItem);
@@ -253,7 +253,7 @@ exports.updateItemQuantity = async (req: Request, res: Response) => {
 
 
 
-exports.clearCart = async (req: Request, res: Response) => {
+export const clearCart = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const cartItemRepository = dataSource.getRepository(CartItem);
@@ -293,7 +293,7 @@ exports.clearCart = async (req: Request, res: Response) => {
 
 
 // Function to handle cart checkout (simple version)
-exports.checkoutCart = async (req: Request, res: Response) => {
+export const checkoutCart = async (req: Request, res: Response) => {
   const dataSource = getDataSource();
   const cartRepository = dataSource.getRepository(Cart);
   const cartItemRepository = dataSource.getRepository(CartItem);

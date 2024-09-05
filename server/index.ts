@@ -1,7 +1,9 @@
 import express from 'express';
 import { connect } from './config/dataSource'; // Adjust the import path as necessary
-const productRoute = require("./routes/Product")
-const cartRoute = require("./routes/Cart");
+// const productRoute = require("./routes/Product")
+// const cartRoute = require("./routes/Cart");
+import cartRoute from './routes/Cart';
+import productRoute from './routes/Product';
 
 require("dotenv").config();
 const app = express();

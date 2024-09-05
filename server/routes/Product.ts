@@ -1,4 +1,5 @@
-const express = require("express");
+// const express = require("express");
+import express from "express"
 const router = express.Router();
 
 const { getAllProducts, getProductById, getProductByCategory, searchProducts, getAllCategories } = require('../controllers/Products');
@@ -9,4 +10,5 @@ router.get('/getProductByCategory/:category', getProductByCategory);
 router.get('/searchProducts', searchProducts);
 router.get('/getAllCategories', getAllCategories);
 
-module.exports = router;
+export default router;
+// module.exports = router;
