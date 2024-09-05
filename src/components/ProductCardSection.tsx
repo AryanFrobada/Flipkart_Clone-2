@@ -4,21 +4,22 @@ import { fetchProductsOfCategories } from "../services/operations/productAPI";
 import { useRouter } from "next/navigation";
 
 // Define TypeScript type for products if using TypeScript
+interface ProductCardSectionProps {
+  category: string;
+}
 
-export default function Section() {
+export default function Section({category}: ProductCardSectionProps) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   
   useEffect(() => {
     const getProductsByCategory = async () => {
       try {
-        const productData = await fetchProductsOfCategories('smartphones');
+        const productData = await fetchProductsOfCategories(category);
         // const res = productData.data;
 
         if (Array.isArray(productData)) {
-            const filteredProducts = productData.filter((product) =>
-                [121, 124, 128, 125].includes(product.id)
-              );
+            const filteredProducts = productData.slice(0,4);
             setProducts(filteredProducts);
         } else {
           console.error("Unexpected response format", productData);
@@ -34,7 +35,7 @@ export default function Section() {
   return (
     <div className="my-12 px-8 bg-white py-3 w-[95vw] max-w-screen-xl mx-auto">
       {/* Section Heading */}
-      <h2 className="text-xl font-bold mb-6">Best Deals on Smartphones</h2>
+      <h2 className="text-xl font-bold mb-6">{`Best Deals on ${category}...`}</h2>
       {/* Product Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
         {products.map((product, index) => (
@@ -48,7 +49,7 @@ export default function Section() {
           >
             <div className="relative w-full h-auto">
               <img
-                src={product.images[2]}
+                src={product.images[0]}
                 alt={product.title}
                 style={{ objectFit: 'cover' }}
                 className="rounded-t-lg"
