@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { fetchProductsOfCategories } from "../../../services/operations/productAPI";
+import { useRouter } from "next/navigation";
 
 export default function CategoryPage() {
     const [products, setProducts] = useState<any[]>([]);
 
+    const router = useRouter();
     const path = window.location.pathname; // "/category/smartphones"
     const segments = path.split('/');
     const categoryname = segments[segments.length - 1]; // Extract category name
@@ -38,6 +40,10 @@ export default function CategoryPage() {
             <div className="space-y-8">
                 {products.map((product) => (
                     <div
+                        onClick={() => {
+                            const cleanCategory = product.category.replace(/[{}]/g, ""); // Clean the category name
+                            router.push(`/product/${cleanCategory}/${product.id}`); // Redirect to dynamic route
+                          }}
                         key={product.id}
                         className="flex bg-white cursor-pointer shadow-lg rounded-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300"
                     >

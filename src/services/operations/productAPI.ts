@@ -26,6 +26,24 @@ export async function fetchAllCategories() {
 }
 
 
+export async function fetchProductById(id: string) {
+  try{
+    const response = await apiConnector('GET', `http://localhost:4000/api/v1/products/getProductById/${id}`);
+    console.log("GET_PRODUCT_BY_ID_API RESPONSE.....", response);
+
+    if(!response.data.success){
+      throw new Error(response.data.message);
+    }
+
+    console.log("Printing Product Details: ", response.data.data);
+    return response.data.data;
+  } catch(err){
+    console.error("Error fetching product by ID:", err);
+    throw err;
+  }
+}
+
+
 export async function fetchProductsOfCategories(slug: string) {
     try{
         const response = await apiConnector('GET', `http://localhost:4000/api/v1/products/getProductByCategory/${slug}`);
