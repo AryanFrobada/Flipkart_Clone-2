@@ -52,7 +52,8 @@ export default function Navbar() {
             <span>Login</span>
           </button>
 
-          <button className="flex items-center space-x-2.5 text-gray-700 px-3 py-2.5">
+          <button onClick={() => router.push('/cart')}
+           className="flex items-center space-x-2.5 text-gray-700 px-3 py-2.5">
             <FaShoppingCart />
             <span>Cart</span>
           </button>
