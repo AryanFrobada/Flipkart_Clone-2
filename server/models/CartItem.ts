@@ -1,20 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Cart } from './Cart';
-import { Product } from './Product'; // Assuming you have a Product model
 
 @Entity()
 export class CartItem {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number; // Unique identifier for the cart item record
 
-  @ManyToOne(() => Cart, cart => cart.items)
-  @JoinColumn({ name: 'cart_id' })
+  @ManyToOne(() => Cart, (cart) => cart.items)
   cart!: Cart;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: 'product_id' })
-  product?: Product;
+  @Column()
+  productId!: number; // ID of the product from DummyJSON API
 
-  @Column('int')
-  quantity?: number;
+  @Column()
+  quantity!: number; // Number of units of the product in the cart
 }

@@ -1,16 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { CartItem } from './CartItem';
 import { User } from './User';
-import { CartItem } from './CartItem'; // Make sure the import path is correct
 
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number; // Unique identifier for each cart
 
-  @ManyToOne(() => User, user => user.carts)
-  @JoinColumn({ name: 'user_id' })
-  user!: User;
+  @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
+  items?: CartItem[]; // Relationship to CartItem entities
 
-  @OneToMany(() => CartItem, cartItem => cartItem.cart, { cascade: true })
-  items?: CartItem[];
+  @ManyToOne(() => User, (user) => user.carts)
+  user!: User; // Relationship to User entity
 }

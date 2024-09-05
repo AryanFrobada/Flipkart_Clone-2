@@ -26,8 +26,8 @@ export class User {
   verifyToken?: string;
 
   @Column({ type: 'datetime', nullable: true })
-  verifyTokenExpiry!: Date;
+  verifyTokenExpiry?: Date; // Make optional if it can be null
 
-  @OneToMany(() => Cart, cart => cart.user)
-  carts?: Cart[];
+  @OneToMany(() => Cart, (cart) => cart.user)
+  carts?: Cart[]; // Relationship to Cart entities
 }
