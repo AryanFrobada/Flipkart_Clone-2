@@ -68,7 +68,7 @@ export default function ProductPage() {
             {/* Price and Discount */}
             <div className="flex items-center mb-4">
               <p className="text-3xl font-bold text-gray-800">
-                ₹{product.price}
+                ${product.price}
               </p>
               <p className="text-lg font-semibold text-green-600 ml-4">
                 {product.discountPercentage}% Off

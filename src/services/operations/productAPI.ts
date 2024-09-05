@@ -63,6 +63,25 @@ export async function fetchProductsOfCategories(slug: string) {
 }
 
 
+export async function searchProducts(query: string) {
+  try{
+    const response = await apiConnector('GET', `http://localhost:4000/api/v1/products/searchProducts?q=${query}`);
+    console.log("SEARCH_PRODUCTS_API RESPONSE.....", response);
+
+    if(!response.data.success){
+      throw new Error(response.data.message);
+    }
+
+    console.log("Printing Searched Products Array: ", response.data.data.products);
+
+    return response.data.data.products;
+  } catch(err){
+    console.log("Error fetching products from serached query !!", err);
+    throw err;
+  }
+}
+
+
 export const fetchCategoryImageBySlug = async (slug) => {
     try {
       const response = await axios.get(`https://dummyjson.com/products/category/${slug}`);
