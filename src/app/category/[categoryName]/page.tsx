@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { fetchProductsOfCategories } from "../../../services/operations/productAPI";
 import { useRouter } from "next/navigation";
+import { addToCart } from "../../../services/operations/cartAPI";
 
 export default function CategoryPage() {
     const [products, setProducts] = useState<any[]>([]);
+    const [quantity, setQuantity] = useState(1); // Quantity state
+    const [userId, setUserId] = useState('1'); // Assume you get the user ID from context/auth
 
     const router = useRouter();
     const path = window.location.pathname; // "/category/smartphones"
@@ -33,6 +36,26 @@ export default function CategoryPage() {
 
         getProductsByCategory();
     }, [categoryname]);
+
+    const handleAddToCart = async (productId: string) => {
+        try {
+          if (!userId) {
+            alert('You need to log in to add items to the cart.');
+            return;
+          }
+    
+          const response = await addToCart(userId, productId.toString(), quantity.toString());
+    
+          if (response.success) {
+            alert('Product added to cart successfully!');
+          } else {
+            alert(`Failed to add to cart: ${response.message}`);
+          }
+        } catch (err) {
+          console.error('Error adding item to cart:', err);
+          alert('There was an issue adding this item to your cart.');
+        }
+      };
 
     return (
         <div className="my-12 px-8 bg-gray-100 py-3 w-[95vw] max-w-screen-xl mx-auto">
@@ -76,6 +99,20 @@ export default function CategoryPage() {
                                 <p className="text-sm text-gray-500">Save Extra with Combo Offers</p>
                             </div>
                         </div>
+
+                         {/* Redesigned Add to Cart and Buy Now Buttons */}
+                         <div className="flex flex-col justify-center items-start w-1/3 space-y-4">
+                                <button onClick={() => {handleAddToCart(product.id)}}
+                                    className="px-6 py-3 bg-yellow-500 text-white rounded-lg font-semibold shadow-md hover:bg-yellow-600 hover:shadow-lg transition duration-300 ease-in-out"
+                                >
+                                    Add to Cart
+                                </button>
+                                <button
+                                    className="px-6 py-3 bg-red-500 text-white rounded-lg font-semibold shadow-md hover:bg-red-600 hover:shadow-lg transition duration-300 ease-in-out"
+                                >
+                                    Buy Now
+                                </button>
+                            </div>
                     </div>
                 ))}
             </div>
