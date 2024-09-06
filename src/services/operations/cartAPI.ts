@@ -80,3 +80,43 @@ export async function updateItemQuantity(userId: string, productId: string, quan
         throw err;
     }
 }
+
+
+export async function clearCart(userId: string) {
+    try{
+        const response = await apiConnector('DELETE', `http://localhost:4000/api/v1/cart/clearCart`, {
+            userId,
+        });
+
+        console.log("CLEAR_CART_API RESPONSE.....", response);
+
+        if(!response.data.success){
+            throw new Error(response.data.message);
+        }
+
+        return response.data;
+    } catch(err){
+        console.log("Error while clearing Cart...", err);
+        throw err;
+    }
+}
+
+
+export async function checkoutCart(userId: string) {
+    try{
+        const response = await apiConnector('POST', `http://localhost:4000/api/v1/cart/checkout`, {
+            userId,
+        });
+
+        console.log("CHECKOUT_CART_API RESPONSE.....", response);
+
+        if(!response.data.success){
+            throw new Error(response.data.message);
+        }
+
+        return response.data;
+    } catch(err){
+        console.log("Error in checking out cart items.....", err);
+        throw err;
+    }
+}
