@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // To get category and id from route
 import { fetchProductById } from '../../../../services/operations/productAPI'; // Adjust the import path
+import { addToCart } from '../../../../services/operations/cartAPI';
 
 // Define the Product type
 interface Product {
@@ -19,6 +20,9 @@ interface Product {
 export default function ProductPage() {
   const { category, id } = useParams(); // Get category and product ID from URL
   const [product, setProduct] = useState<Product | null>(null);
+  const [quantity, setQuantity] = useState(1); // Quantity state
+  const [userId, setUserId] = useState('1'); // Assume you get the user ID from context/auth
+  
 
   useEffect(() => {
     const getProduct = async () => {
@@ -34,6 +38,27 @@ export default function ProductPage() {
       getProduct();
     }
   }, [id]);
+
+
+  const handleAddToCart = async () => {
+    try {
+      if (!userId) {
+        alert('You need to log in to add items to the cart.');
+        return;
+      }
+
+      const response = await addToCart(userId, id.toString(), quantity.toString());
+
+      if (response.success) {
+        alert('Product added to cart successfully!');
+      } else {
+        alert(`Failed to add to cart: ${response.message}`);
+      }
+    } catch (err) {
+      console.error('Error adding item to cart:', err);
+      alert('There was an issue adding this item to your cart.');
+    }
+  };
 
   if (!product) {
     return <div>Loading...</div>; // Render loading state
@@ -103,7 +128,7 @@ export default function ProductPage() {
 
           {/* Buttons: Add to Cart and Buy Now */}
           <div className="flex gap-4 mt-5 ml-10 justify-start">
-            <button className="bg-yellow-500 text-white text-lg px-7 py-2.5 rounded-lg font-semibold hover:bg-yellow-600 transition">
+            <button onClick={handleAddToCart} className="bg-yellow-500 text-white text-lg px-7 py-2.5 rounded-lg font-semibold hover:bg-yellow-600 transition">
               Add to Cart
             </button>
             <button className="bg-orange-500 text-white text-lg px-7 py-2.5 rounded-lg font-semibold hover:bg-orange-600 transition">

@@ -65,6 +65,15 @@ export const addToCart = async (req: Request, res: Response) => {
       });
     }
 
+    const parsedQuantity = parseInt(quantity, 10); // Parse quantity to an integer
+
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a valid positive number',
+      });
+    }
+
     const user = await userRepository.findOneBy({ id: userId });
 
     // Ensure the User Exists
