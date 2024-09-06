@@ -58,3 +58,25 @@ export async function removeFromCart(userId: string, productId: string) {
         throw err;
     }
 }
+
+
+export async function updateItemQuantity(userId: string, productId: string, quantity: string) {
+    try{
+        const response = await apiConnector('PUT', `http://localhost:4000/api/v1/cart/update`, {
+            userId,
+            productId,
+            quantity,
+        });
+
+        console.log("UPDATE_ITEM_QUANTITY_API RESPONSE....", response);
+
+        if(!response.data.success){
+            throw new Error(response.data.message);
+        }
+
+        return response.data;
+    } catch(err){
+        console.log("Error while updating Item Quantity....", err);
+        throw err;
+    }
+}
