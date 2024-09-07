@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { fetchProductsOfCategories } from "../../../services/operations/productAPI";
 import { useRouter } from "next/navigation";
 import { addToCart } from "../../../services/operations/cartAPI";
+import { useToast } from "../../../hooks/use-toast";
 
 export default function CategoryPage() {
+    const {toast} = useToast();
     const [products, setProducts] = useState<any[]>([]);
     const [quantity, setQuantity] = useState(1); // Quantity state
     const [userId, setUserId] = useState('1'); // Assume you get the user ID from context/auth
@@ -40,20 +42,29 @@ export default function CategoryPage() {
     const handleAddToCart = async (productId: string) => {
         try {
           if (!userId) {
-            alert('You need to log in to add items to the cart.');
+            toast({
+                title: "You need to log in to add items to the cart.",
+            });
             return;
           }
     
           const response = await addToCart(userId, productId.toString(), quantity.toString());
     
           if (response.success) {
-            alert('Product added to cart successfully!');
+            toast({
+                title: "Product added to cart successfully!",
+            });
           } else {
-            alert(`Failed to add to cart: ${response.message}`);
+            toast({
+                title: "Failed to add to cart !!",
+                description: `${response.message}`,
+            });
           }
         } catch (err) {
           console.error('Error adding item to cart:', err);
-          alert('There was an issue adding this item to your cart.');
+          toast({
+            title: "There was an issue adding this item to your cart.",
+          });
         }
       };
 
