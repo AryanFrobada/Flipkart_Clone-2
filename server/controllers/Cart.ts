@@ -104,14 +104,14 @@ export const addToCart = async (req: Request, res: Response) => {
 
     if (cartItem) {
       // Update quantity if item already exists
-      cartItem.quantity += quantity;
+      cartItem.quantity += parsedQuantity;
       await cartItemRepository.save(cartItem);
     } else {
       // Create a new cart item
       cartItem = new CartItem();
       cartItem.cart = cart;
       cartItem.productId = productId;
-      cartItem.quantity = quantity;
+      cartItem.quantity = parsedQuantity;
       await cartItemRepository.save(cartItem);
     }
 

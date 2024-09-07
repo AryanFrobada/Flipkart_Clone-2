@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // To get category and id from route
 import { fetchProductById } from '../../../../services/operations/productAPI'; // Adjust the import path
 import { addToCart } from '../../../../services/operations/cartAPI';
+import { useToast } from '../../../../hooks/use-toast';
 
 // Define the Product type
 interface Product {
@@ -18,6 +19,7 @@ interface Product {
 }
 
 export default function ProductPage() {
+  const {toast} = useToast();
   const { category, id } = useParams(); // Get category and product ID from URL
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1); // Quantity state
@@ -50,9 +52,14 @@ export default function ProductPage() {
       const response = await addToCart(userId, id.toString(), quantity.toString());
 
       if (response.success) {
-        alert('Product added to cart successfully!');
+        toast({
+          title: "Product added to cart successfully",
+        });
       } else {
-        alert(`Failed to add to cart: ${response.message}`);
+        toast({
+          title: "Failed to add to cart !!",
+          description: `${response.message}`,
+        });
       }
     } catch (err) {
       console.error('Error adding item to cart:', err);
