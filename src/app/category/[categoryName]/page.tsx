@@ -11,6 +11,7 @@ export default function CategoryPage() {
     const [products, setProducts] = useState<any[]>([]);
     const [quantity, setQuantity] = useState(1); // Quantity state
     const [userId, setUserId] = useState('1'); // Assume you get the user ID from context/auth
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
     const path = window.location.pathname; // "/category/smartphones"
@@ -20,6 +21,7 @@ export default function CategoryPage() {
 
     useEffect(() => {
         const getProductsByCategory = async () => {
+            setLoading(true);
             try {
                 if (categoryname) { // Check if categoryname is available
                     const productData = await fetchProductsOfCategories(categoryname.toString());
@@ -34,8 +36,8 @@ export default function CategoryPage() {
             } catch (err) {
                 console.error("Error fetching products by category", err);
             }
+            setLoading(false);
         };
-
         getProductsByCategory();
     }, [categoryname]);
 
@@ -67,6 +69,12 @@ export default function CategoryPage() {
           });
         }
       };
+
+      if (loading) {
+        return <div className="flex w-full h-full justify-center items-center">
+                  <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+                </div>
+      }
 
     return (
         <div className="my-12 px-8 bg-gray-100 py-3 w-[95vw] max-w-screen-xl mx-auto">

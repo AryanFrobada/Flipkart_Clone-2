@@ -68,7 +68,9 @@ export default function ProductPage() {
   };
 
   if (!product) {
-    return <div>Loading...</div>; // Render loading state
+    return <div className="flex w-full h-full justify-center items-center">
+              <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+            </div>
   }
 
   return (

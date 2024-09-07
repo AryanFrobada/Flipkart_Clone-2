@@ -49,7 +49,9 @@ export default function CategoriesWithImages() {
             <span className="text-gray-800 text-md font-bold">{category.name}</span>
           </div>
         )) : (
-          <div className="text-gray-700 mx-auto">No categories found.</div>
+          <div className="flex w-full justify-center items-center">
+            <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+          </div>
         )}
       </div>
     </div>
