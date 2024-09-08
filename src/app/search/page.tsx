@@ -53,7 +53,9 @@ export default function SearchPage() {
       <h1 className="text-2xl font-bold mb-6">Search Results for "{query}"</h1>
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="flex w-full h-full justify-center items-center">
+          <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+        </div>
       ) : error ? (
         <div>{error}</div>
       ) : products.length > 0 ? (
