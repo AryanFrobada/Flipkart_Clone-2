@@ -5,59 +5,23 @@ import bcrypt from "bcrypt";
 import { getDataSource } from "../../../../../server/config/dataSource";
 import { User } from "../../../../../server/models/User";
 import { Profile } from "next-auth";
+import dotenv from "dotenv"
+
+dotenv.config();
 
 interface GoogleProfile extends Profile {
   email_verified?: boolean;
 }
 
+// console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+// console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
+
+
 export const authOptions: NextAuthOptions = {
   providers: [
-    CredentialsProvider({
-      id: "credentials",
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials: any): Promise<any> {
-        try {
-          if (!credentials?.email || !credentials?.password) {
-            throw new Error("Email and Password are required");
-          }
-
-          const dataSource = getDataSource();
-          const userRepository = dataSource.getRepository(User);
-
-          const user = await userRepository.findOne({ where: { email: credentials.email.toString() } });
-
-          if (!user) {
-            console.log("No user found with this email");
-            throw new Error("No user found with this email");
-          }
-
-          const isValidPassword = await bcrypt.compare(credentials.password, user.password);
-
-          if (!isValidPassword) {
-            console.log("Invalid credentials");
-            throw new Error("Invalid credentials");
-          }
-
-          return user;
-
-        } catch (error) {
-          console.error("Error in authorize function:", error);
-          throw new Error("Authorization failed, please check your credentials.");
-        }
-      },
-    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          redirect_uri: 'http://localhost:3000/api/auth/callback/google',
-        }
-      }
     }),
   ],
   pages: {
@@ -65,12 +29,14 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
+    maxAge: 5*60,
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,
 
   callbacks: {
     async signIn({ user, account, profile }: { user: any; account: any; profile?: GoogleProfile }) {
+      console.log("Sign-in attempt:", { user, account, profile });
       if (account?.provider === "google") {
         return profile?.email_verified && profile.email?.endsWith("@gmail.com") || false;
       }
@@ -89,6 +55,10 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email as string;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) return url;
+      return baseUrl;
     },
   },
 };

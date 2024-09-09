@@ -123,7 +123,9 @@ const SignInPage = () => {
           </form>
         </Form>
 
-        <Button onClick={() => signIn('google')}
+        <Button onClick={async() => {
+           const result = await signIn('google', { redirect: false });
+        }}
             disabled={isSubmitting}
             variant="outline">
             Sign in with Google
