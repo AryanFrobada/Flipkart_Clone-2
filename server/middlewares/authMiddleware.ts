@@ -9,19 +9,19 @@ interface User {
 }
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Get token from Bearer header
+  // const token = req.headers['authorization']?.split(' ')[1]; // Get token from Bearer header
 
-  if (!token) {
-    return res.status(401).json({ success: false, message: "Access token required" });
-  }
+  // if (!token) {
+  //   return res.status(401).json({ success: false, message: "Access token required" });
+  // }
 
-  jwt.verify(token, process.env.NEXTAUTH_SECRET!, (err, decoded, req) => {
-    if (err) {
-      return res.status(403).json({ success: false, message: "Invalid token" });
-    }
+  // jwt.verify(token, process.env.NEXTAUTH_SECRET!, (err, decoded, req) => {
+  //   if (err) {
+  //     return res.status(403).json({ success: false, message: "Invalid token" });
+  //   }
 
-    // Ensure the `decoded` object is properly typed
-    req.user = decoded as User; // Attach user to request object
-    next();
-  });
+  //   // Ensure the `decoded` object is properly typed
+  //   req.user = decoded as User; // Attach user to request object
+  //   next();
+  // });
 };

@@ -78,7 +78,7 @@ exports.getProductByCategory = async(req: Request, res: Response) => {
         // console.log("Printing Response in backend product bt category: ", response);
         const products = response.data;
 
-        console.log("Printing Products in backend !!", products);
+        // console.log("Printing Products in backend !!", products);
 
         return res.status(200).json({
             success: true,

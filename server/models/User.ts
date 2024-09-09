@@ -30,4 +30,7 @@ export class User {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   carts?: Cart[]; // Relationship to Cart entities
+
+  @Column({ nullable: true })
+  googleId?: string; // To store Google user ID if needed
 }

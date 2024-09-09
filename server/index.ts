@@ -4,6 +4,7 @@ import { connect } from './config/dataSource'; // Adjust the import path as nece
 // const cartRoute = require("./routes/Cart");
 import cartRoute from './routes/Cart';
 import productRoute from './routes/Product';
+import authRoute from './routes/User'
 
 require("dotenv").config();
 const app = express();
@@ -20,6 +21,7 @@ app.use(
 
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/cart", cartRoute);
+app.use("/api/v1/users", authRoute);
 
 // Basic route for testing
 app.get('/', (req, res) => {
