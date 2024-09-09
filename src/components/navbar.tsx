@@ -1,12 +1,15 @@
 'use client';
-import React, { useState } from "react";
-import { FaSearch, FaUserAlt, FaShoppingCart, FaStore, FaEllipsisV } from "react-icons/fa";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+
+import React, { useState } from 'react';
+import { FaSearch, FaUserAlt, FaShoppingCart, FaStore, FaEllipsisV } from 'react-icons/fa';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react'; // Import signOut from next-auth
 
 export default function Navbar() {
   const router = useRouter();
   const [searchText, setSearchText] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown toggle state
 
   // Handle the form submission for search
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,17 +21,22 @@ export default function Navbar() {
     }
   };
 
+  // Handle sign out
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/' }); // Redirect after sign out
+  };
+
   return (
     <div className="bg-white shadow-md w-full">
       <div className="mx-12 flex items-center justify-between p-4 space-x-6">
         {/* Logo */}
-        <div onClick={() => router.push("/")} className="cursor-pointer">
-          <Image 
-            src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg" 
-            alt="Flipkart Logo" 
-            className="" 
-            width={156} 
-            height={40} 
+        <div onClick={() => router.push('/')} className="cursor-pointer">
+          <Image
+            src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg"
+            alt="Flipkart Logo"
+            className=""
+            width={156}
+            height={40}
           />
         </div>
 
@@ -46,14 +54,15 @@ export default function Navbar() {
 
         {/* Action Buttons */}
         <div className="flex items-center space-x-4">
-          <button onClick={() => router.push('/sign-in')}
-           className="flex items-center space-x-2.5 text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2.5 rounded-xl transition-colors duration-200">
+          <button
+            onClick={() => router.push('/sign-in')}
+            className="flex items-center space-x-2.5 text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2.5 rounded-xl transition-colors duration-200"
+          >
             <FaUserAlt />
             <span>Login</span>
           </button>
 
-          <button onClick={() => router.push('/cart')}
-           className="flex items-center space-x-2.5 text-gray-700 px-3 py-2.5">
+          <button onClick={() => router.push('/cart')} className="flex items-center space-x-2.5 text-gray-700 px-3 py-2.5">
             <FaShoppingCart />
             <span>Cart</span>
           </button>
@@ -64,10 +73,34 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Last Button */}
-        <button className="text-gray-700 ml-auto">
-          <FaEllipsisV />
-        </button>
+        {/* Last Button with Dropdown */}
+        <div
+          className="relative"
+          onMouseEnter={() => setIsDropdownOpen(true)}
+          onMouseLeave={() => setIsDropdownOpen(false)}
+        >
+          <button className="text-gray-700 ml-auto">
+            <FaEllipsisV />
+          </button>
+
+          {/* Dropdown */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-0 w-48 bg-white shadow-lg rounded-md py-2 z-10">
+              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                24x7 Customer Care
+              </a>
+              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                Notification Preferences
+              </a>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
